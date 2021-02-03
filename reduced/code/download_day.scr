@@ -1,0 +1,9 @@
+#!/bin/bash 
+wget -nc --content-disposition --continue --user=s5pguest --password=s5pguest -P /geos/d21/sat_data/TROPOMI/NO2/EU/2020/07/ "https://s5phub.copernicus.eu/dhus/odata/v1/Products('4edb10f6-6033-4696-8035-880091e01513')/\$value" 
+wget -nc --content-disposition --continue --user=s5pguest --password=s5pguest -P /geos/d21/sat_data/TROPOMI/NO2/EU/2020/07/ "https://s5phub.copernicus.eu/dhus/odata/v1/Products('1558b47e-6aba-4521-a9b3-341755675cff')/\$value" 
+wget -nc --content-disposition --continue --user=s5pguest --password=s5pguest -P /geos/d21/sat_data/TROPOMI/NO2/EU/2020/07/ "https://s5phub.copernicus.eu/dhus/odata/v1/Products('43df4993-05ab-4736-b146-33abc4bdb979')/\$value" 
+wget -nc --content-disposition --continue --user=s5pguest --password=s5pguest -P /geos/d21/sat_data/TROPOMI/NO2/EU/2020/07/ "https://s5phub.copernicus.eu/dhus/odata/v1/Products('43c5ba5a-d6cc-4436-a729-aa90b930d073')/\$value" 
+wget -nc --content-disposition --continue --user=s5pguest --password=s5pguest -P /geos/d21/sat_data/TROPOMI/NO2/EU/2020/07/ "https://s5phub.copernicus.eu/dhus/odata/v1/Products('88ab6115-d012-4071-80ca-94145fb6e368')/\$value" 
+wget -nc --content-disposition --continue --user=s5pguest --password=s5pguest -P /geos/d21/sat_data/TROPOMI/NO2/EU/2020/07/ "https://s5phub.copernicus.eu/dhus/odata/v1/Products('02adffa6-15a6-4d5d-8f55-f064c0529cce')/\$value" 
+wget -nc --content-disposition --continue --user=s5pguest --password=s5pguest -P /geos/d21/sat_data/TROPOMI/NO2/EU/2020/07/ "https://s5phub.copernicus.eu/dhus/odata/v1/Products('a04a41d5-96a5-4cd5-a48a-cb1fc41ca9f0')/\$value" 
+wget -nc --content-disposition --continue --user=s5pguest --password=s5pguest -P /geos/d21/sat_data/TROPOMI/NO2/EU/2020/07/ "https://s5phub.copernicus.eu/dhus/odata/v1/Products('a9fee632-0877-4c10-a6ca-9e5a5ae62a8f')/\$value" 
