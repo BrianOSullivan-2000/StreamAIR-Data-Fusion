@@ -1,4 +1,4 @@
-ROI_df# In[1]
+# In[1]
 
 import numpy as np
 import netCDF4 as nc
@@ -28,8 +28,8 @@ ds = open_ncfile("reduced/2020/04/" + "S5P_OFFL_L2__NO2____20200401T124521_20200
 ds_NO2 = ds.nitrogendioxide_tropospheric_column
 
 #Set longitude and latitude bounds
-lon_b = (-14,3)
-lat_b = (48, 60)
+lon_b = (-25, 29)
+lat_b = (35, 68)
 ROI_lon_b = (-11, -5)
 ROI_lat_b = (51.2, 55.8)
 
@@ -69,14 +69,17 @@ ROI_gdf = gpd.GeoDataFrame(ROI_df, geometry=ROI_geometry, crs={'init' :'epsg:432
 
 # In[4]
 
-world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+def map_plot(gdf, variable, markersize):
+    world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
 
-plt.rcParams["font.serif"] = "Times New Roman"
-fig, ax = plt.subplots(1, 1, figsize=(8, 8), dpi=100)
-ax = plt.axes(projection=ccrs.PlateCarree())
-ax.coastlines()
+    plt.rcParams["font.serif"] = "Times New Roman"
+    fig, ax = plt.subplots(1, 1, figsize=(8, 8), dpi=100)
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    gdf.plot(column=variable, cmap='rainbow', marker=',', markersize=markersize , ax=ax, legend=True)
+    ax.coastlines()
 
-gdf.plot(column="nitrogendioxide_tropospheric_column", cmap='rainbow', marker=',', markersize=4 , ax=ax, legend=True)
+
+map_plot(gdf, "nitrogendioxide_tropospheric_column", 4)
 # world.geometry.boundary.plot(color=None, edgecolor='black', ax=ax)
 plt.title("NO2 Concentration (mol m^2) March 1st 2020")
 plt.xlim(lon_b)
@@ -85,14 +88,9 @@ plt.show()
 
 # In[5]
 
-world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
 
-plt.rcParams["font.serif"] = "Times New Roman"
-fig, ax = plt.subplots(1, 1, figsize=(8, 8), dpi=100)
-ax = plt.axes(projection=ccrs.PlateCarree())
-ax.coastlines()
 
-ROI_gdf.plot(column="nitrogendioxide_tropospheric_column", cmap='rainbow', marker=',', markersize=20 , ax=ax, legend=True)
+map_plot(ROI_gdf, "nitrogendioxide_tropospheric_column", 20)
 # world.geometry.boundary.plot(color=None, edgecolor='black', ax=ax)
 plt.title("NO2 Concentration (mol m^2) March 1st 2020")
 plt.xlim(ROI_lon_b)
