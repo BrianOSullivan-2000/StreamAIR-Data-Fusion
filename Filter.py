@@ -34,11 +34,11 @@ good_files_Apr = []
 # Loop through directory
 for filename in os.listdir("reduced/2020/04/"):
 
-
     ds = open_ncfile("reduced/2020/04/" + filename)
 
     #Get NO2 column data
     ds_NO2 = ds.nitrogendioxide_tropospheric_column
+    ds_qa = ds.qa_value
 
     #Set longitude and latitude bounds
     lon_b = (-22, 20)
@@ -48,8 +48,13 @@ for filename in os.listdir("reduced/2020/04/"):
 
     #Convert to dataframe and remove nan values
     df = ds_NO2.to_dataframe()
+
+    #Add qa_value column & filter out qa < 0.5
+    df_qa = ds_qa.to_dataframe()
+    df["qa_value"] = df_qa.qa_value.values
+    df = df[df["qa_value"] > 0.5]
+
     df = df.dropna()
-    ROI_df = df
 
     #Set boundaries for dataframe
     df = df[df["longitude"] > lon_b[0]]
@@ -77,17 +82,21 @@ for filename in os.listdir("reduced/2020/05/"):
 
     #Get NO2 column data
     ds_NO2 = ds.nitrogendioxide_tropospheric_column
+    ds_qa = ds.qa_value
 
     #Set longitude and latitude bounds
     lon_b = (-22, 20)
     lat_b = (42, 62)
-    ROI_lon_b = (-11, -5)
-    ROI_lat_b = (51.2, 55.8)
 
     #Convert to dataframe and remove nan values
     df = ds_NO2.to_dataframe()
+
+    #Add qa_value column & filter out qa < 0.5
+    df_qa = ds_qa.to_dataframe()
+    df["qa_value"] = df_qa.qa_value.values
+    df = df[df["qa_value"] > 0.5]
+
     df = df.dropna()
-    ROI_df = df
 
     #Set boundaries for dataframe
     df = df[df["longitude"] > lon_b[0]]
@@ -99,7 +108,6 @@ for filename in os.listdir("reduced/2020/05/"):
         good_files_May.append(i)
 
     i += 1
-
 
 
 # In[5]
@@ -117,17 +125,21 @@ for filename in os.listdir("reduced/2020/06/"):
 
     #Get NO2 column data
     ds_NO2 = ds.nitrogendioxide_tropospheric_column
+    ds_qa = ds.qa_value
 
     #Set longitude and latitude bounds
     lon_b = (-22, 20)
     lat_b = (42, 62)
-    ROI_lon_b = (-11, -5)
-    ROI_lat_b = (51.2, 55.8)
 
     #Convert to dataframe and remove nan values
     df = ds_NO2.to_dataframe()
+
+    #Add qa_value column & filter out qa < 0.5
+    df_qa = ds_qa.to_dataframe()
+    df["qa_value"] = df_qa.qa_value.values
+    df = df[df["qa_value"] > 0.5]
+
     df = df.dropna()
-    ROI_df = df
 
     #Set boundaries for dataframe
     df = df[df["longitude"] > lon_b[0]]
@@ -141,3 +153,7 @@ for filename in os.listdir("reduced/2020/06/"):
     i += 1
 
 # In[6]
+
+print(good_files_Apr)
+print(good_files_May)
+print(good_files_Jun)
