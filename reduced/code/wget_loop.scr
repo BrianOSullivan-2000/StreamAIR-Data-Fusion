@@ -1,4 +1,0 @@
-#!/bin/bash 
-USERNAME=s5pguest 
-PASSWORD=s5pguest 
-wget --no-check-certificate --user=s5pguest --password=s5pguest --output-document=query_results.txt 'https://s5phub.copernicus.eu/dhus/search?q=footprint:"intersects(POLYGON((-11 36,36 36,36 64,-11 64,-11 36)))" AND beginposition:[2020-07-01T00:00:00.000Z TO 2020-07-01T23:59:59.999Z] AND producttype:L2__NO2___&rows=100&start=0&format=json' 
