@@ -54,6 +54,7 @@ for filename in os.listdir("reduced/2020/04/"):
     df["qa_value"] = df_qa.qa_value.values
     df = df[df["qa_value"] > 0.5]
 
+    #Drop NaN values
     df = df.dropna()
 
     #Set boundaries for dataframe
@@ -62,6 +63,7 @@ for filename in os.listdir("reduced/2020/04/"):
     df = df[df["latitude"] > lat_b[0]]
     df = df[df["latitude"] < lat_b[1]]
 
+    #Record file index if useful data present
     if df.empty == False:
         good_files_Apr.append(i)
 
@@ -96,6 +98,7 @@ for filename in os.listdir("reduced/2020/05/"):
     df["qa_value"] = df_qa.qa_value.values
     df = df[df["qa_value"] > 0.5]
 
+    #Drop NaN values
     df = df.dropna()
 
     #Set boundaries for dataframe
@@ -104,6 +107,7 @@ for filename in os.listdir("reduced/2020/05/"):
     df = df[df["latitude"] > lat_b[0]]
     df = df[df["latitude"] < lat_b[1]]
 
+    #Record file index if useful data present
     if df.empty == False:
         good_files_May.append(i)
 
@@ -139,6 +143,7 @@ for filename in os.listdir("reduced/2020/06/"):
     df["qa_value"] = df_qa.qa_value.values
     df = df[df["qa_value"] > 0.5]
 
+    #Drop NaN values
     df = df.dropna()
 
     #Set boundaries for dataframe
@@ -147,6 +152,7 @@ for filename in os.listdir("reduced/2020/06/"):
     df = df[df["latitude"] > lat_b[0]]
     df = df[df["latitude"] < lat_b[1]]
 
+    #Record file index if useful data present
     if df.empty == False:
         good_files_Jun.append(i)
 
@@ -154,6 +160,7 @@ for filename in os.listdir("reduced/2020/06/"):
 
 # In[6]
 
+#Index lists were simply copy & pasted into Good_files.txt for storage
 print(good_files_Apr)
 print(good_files_May)
 print(good_files_Jun)

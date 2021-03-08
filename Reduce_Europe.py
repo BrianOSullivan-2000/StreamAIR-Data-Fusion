@@ -29,6 +29,7 @@ def open_ncfile(filename):
 
 
 def reduce(ds):
+
     #reduce file to useful data in Western Europe
     ds_NO2 = ds.nitrogendioxide_tropospheric_column
     ds_qa = ds.qa_value
@@ -39,11 +40,12 @@ def reduce(ds):
     #Convert to dataframe
     df = ds_NO2.to_dataframe()
 
-    #Add other values
+    #Add auxiliary values
     df_NO2_precision = ds_NO2_precision.to_dataframe()
     df_cloud_fraction = ds_cloud_fraction.to_dataframe()
     df_cloud_radiance = ds_cloud_radiance.to_dataframe()
 
+    #Add values as columns to dataframe
     df["nitrogendioxide_tropospheric_column_precision"] = df_NO2_precision.nitrogendioxide_tropospheric_column_precision.values
     df["cloud_fraction_crb_nitrogendioxide_window"] = df_cloud_fraction.cloud_fraction_crb_nitrogendioxide_window.values
     df["cloud_radiance_fraction_nitrogendioxide_window"] = df_cloud_radiance.cloud_radiance_fraction_nitrogendioxide_window.values
@@ -64,7 +66,6 @@ def reduce(ds):
     df = df[df["latitude"] > lat_b[0]]
     df = df[df["latitude"] < lat_b[1]]
 
-
     #Set geometry with latitudes and longitudes
     df_lon = df.longitude.values
     df_lat = df.latitude.values
@@ -81,15 +82,16 @@ def reduce(ds):
 # In[3]
 
 #Extract filtered lists indexing useful files
-
 def get_correct_files(Month, number):
 
+    #Loop over files evaluated with Filter.py
     with open("Good files.txt") as f:
         lines = f.readlines()
 
         for line in lines:
             if (lines.index(line) + 1) / 2 == number:
 
+                #Split into values and remove "[]" from beginning and end
                 list = (line.split(", "))
                 list[0], list[-1] = list[0][1:], list[-1][:-2]
 
@@ -99,7 +101,7 @@ def get_correct_files(Month, number):
 April, May, June = [], [], []
 
 #Note April==1, May==2, June==3
-
+#Compile lists of indexes for useful files
 get_correct_files(April, 1)
 get_correct_files(May, 2)
 get_correct_files(June, 3)
@@ -109,14 +111,17 @@ get_correct_files(June, 3)
 #Open files according to get_correct_files(), reduce them and write to Europe directories
 i = 1
 
+#Loop through files in reduced/, files moved afterwards due to lack of space
 for filename in os.listdir("reduced/2020/06/"):
 
     if i in June:
 
+        #Extract and reduce file data
         raw_file = open_ncfile("reduced/2020/06/" + filename)
         file = reduce(raw_file)
         raw_file.close()
 
+        #Save reduced file in .json format
         file.to_file("Europe - June/" + "Sentinel-5P_June_{}.json".format(i), driver='GeoJSON')
 
 
@@ -124,13 +129,6 @@ for filename in os.listdir("reduced/2020/06/"):
 
 # In[5]
 
-raw_file = open_ncfile("reduced/2020/04/" + "S5P_OFFL_L2__NO2____20200401T092220_20200401T110350_12783_01_010302_20200403T015952.reduced.nc")
-file = reduce(raw_file)
-raw_file.close()
-
-file.to_file("Europe - April/" + "Sentinel-5P_Apr_{}.json".format(6), driver='GeoJSON')
-
-# In[6]
-
+#Files can now be quickly read into GeoDataFrames
 file = gpd.read_file("Europe - April/" + "Sentinel-5P_Apr_6.json")
 file
