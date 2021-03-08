@@ -81,9 +81,13 @@ ROI_gdf = gpd.GeoDataFrame(ROI_df, geometry=ROI_geometry, crs={'init' :'epsg:432
 
 # In[5]
 
+#Function for plotting values
 def map_plot(gdf, variable, markersize):
+
+    #World map overlay
     world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
 
+    #Plot formatting
     plt.rcParams["font.serif"] = "Times New Roman"
     fig, ax = plt.subplots(1, 1, figsize=(8, 8), dpi=100)
     ax = plt.axes(projection=ccrs.PlateCarree())
@@ -91,8 +95,8 @@ def map_plot(gdf, variable, markersize):
     ax.coastlines()
 
 
+#Plot for Western Europe
 map_plot(gdf, "nitrogendioxide_tropospheric_column", 4)
-# world.geometry.boundary.plot(color=None, edgecolor='black', ax=ax)
 plt.title("NO2 Concentration (mol m^2) March 1st 2020")
 plt.xlim(lon_b)
 plt.ylim(lat_b)
@@ -101,9 +105,8 @@ plt.show()
 # In[5]
 
 
-
+#Plot for Ireland
 map_plot(ROI_gdf, "nitrogendioxide_tropospheric_column", 20)
-# world.geometry.boundary.plot(color=None, edgecolor='black', ax=ax)
 plt.title("NO2 Concentration (mol m^2) March 1st 2020")
 plt.xlim(ROI_lon_b)
 plt.ylim(ROI_lat_b)
