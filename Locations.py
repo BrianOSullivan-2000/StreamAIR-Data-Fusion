@@ -1,3 +1,18 @@
+
+import requests
+import json
+import pandas as pd
+import geopandas as gpd
+import shapely.geometry as shp
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+
+import warnings
+warnings.filterwarnings('ignore')
+
+# In[1]
+
+#List of in-situ weather stations
 locations = [
     # Ireland
     {
@@ -903,3 +918,72 @@ locations = [
         "station_code": 'NO0125A'
     }
 ]
+
+# In[2]
+
+#Set dates & columns
+fromDate = "2021-2-16 14:00"
+toDate = "2021-2-17 14:00"
+keys = ['location', 'datetime', 'meas_NO2', 'model0_NO2', 'model1_NO2']
+
+#Empty row to hold dictionaries
+rows = []
+
+#Loop through locations
+for location in locations:
+
+    #Prepare dictionary & add values
+    data = {}
+    data['location'] = location['name']
+    data['fromDate'], data['toDate'] = fromDate, toDate
+
+    #Create Shapely point for gdf geometry
+    coord = location['point'].split(',')
+    coord = shp.Point(float(coord[1]), float(coord[0]))
+
+    #HTTPS Post request
+    r = requests.post('https://streamair.nuigalway.ie/api/realtime', data=data)
+
+    #Loop through post request adding dictionaries to rows for each datapoint
+    for d in r.json():
+
+        #Add each key
+        d = {key: d[key] for key in keys}
+        d['geometry'] = coord
+        rows.append(d)
+
+#Convert list of dictionaries to rows in GeoDataFrame
+gdf = gpd.GeoDataFrame(rows)
+gdf.sample(10)
+# In[3]
+
+#Clean data (Drop NaN values)
+gdf = gdf.drop(['model1_NO2'], axis=1)
+gdf_clean = gdf.dropna()
+gdf_clean
+# In[4]
+
+#Set longitude and latitude bounds
+lon_b = (-25, 29)
+lat_b = (35, 68)
+
+#Function for plotting values
+def map_plot(gdf, variable, markersize):
+
+    #World map overlay
+    world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+
+    #Plot formatting
+    plt.rcParams["font.serif"] = "Times New Roman"
+    fig, ax = plt.subplots(1, 1, figsize=(8, 8), dpi=100)
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    gdf.plot(column=variable, cmap='rainbow', marker=',', markersize=markersize , ax=ax, legend=True)
+    ax.coastlines()
+
+
+#Plot for Western Europe
+map_plot(gdf_clean, "meas_NO2", 5)
+plt.title("NO2 Concentration (mol m^2) February 16th 2021")
+plt.xlim(lon_b)
+plt.ylim(lat_b)
+plt.show()

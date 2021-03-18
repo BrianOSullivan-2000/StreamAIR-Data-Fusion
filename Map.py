@@ -21,7 +21,8 @@ def open_ncfile(filename):
 
     return ds
 
-ds = open_ncfile("reduced/2020/04/" + "S5P_OFFL_L2__NO2____20200401T092220_20200401T110350_12783_01_010302_20200403T015952.reduced.nc")
+ds = open_ncfile("Test_NetCDF_file.nc")
+
 
 # In[2]
 
@@ -102,12 +103,32 @@ plt.xlim(lon_b)
 plt.ylim(lat_b)
 plt.show()
 
-# In[5]
+# In[6]
 
+#Function for plotting values
+def map_plot(gdf, variable, markersize):
+
+    #World map overlay
+    world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+
+    #Plot formatting
+    plt.rcParams["font.serif"] = "Times New Roman"
+    fig, ax = plt.subplots(1, 1, figsize=(8, 8), dpi=100)
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    gdf.plot(column=variable, cmap='rainbow', marker=',', markersize=markersize , ax=ax, legend=True)
+    ax.coastlines()
+
+lon_b = (-25, 29)
+lat_b = (35, 68)
+
+#Files can now be quickly read into GeoDataFrames
+ROI_gdf = gpd.read_file("Europe - April/" + "Sentinel-5P_Apr_14.json")
+
+# In[7]
 
 #Plot for Ireland
-map_plot(ROI_gdf, "nitrogendioxide_tropospheric_column", 20)
-plt.title("NO2 Concentration (mol m^2) March 1st 2020")
-plt.xlim(ROI_lon_b)
-plt.ylim(ROI_lat_b)
+map_plot(ROI_gdf, "nitrogendioxide_tropospheric_column", 15)
+plt.title("NO2 Concentration (mol m^2) April 2nd 2020")
+plt.xlim(lon_b)
+plt.ylim(lat_b)
 plt.show()
