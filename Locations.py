@@ -6,6 +6,8 @@ import geopandas as gpd
 import shapely.geometry as shp
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
+import numpy as np
+from datetime import datetime, timedelta
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -922,8 +924,8 @@ locations = [
 # In[2]
 
 #Set dates & columns
-fromDate = "2021-2-16 14:00"
-toDate = "2021-2-17 14:00"
+fromDate = "2020-08-01 00:00"
+toDate = "2020-08-31 23:59"
 keys = ['location', 'datetime', 'meas_NO2', 'model0_NO2', 'model1_NO2']
 
 #Empty row to hold dictionaries
@@ -954,18 +956,44 @@ for location in locations:
 
 #Convert list of dictionaries to rows in GeoDataFrame
 gdf = gpd.GeoDataFrame(rows)
-gdf.sample(10)
+
 # In[3]
 
 #Clean data (Drop NaN values)
-gdf = gdf.drop(['model1_NO2'], axis=1)
-gdf_clean = gdf.dropna()
-gdf_clean
+gdf_clean = gdf.drop("model1_NO2", axis=1)
+gdf_clean = gdf_clean.dropna()
+
 # In[4]
 
+gdf_clean['datetime'] = pd.to_datetime(gdf_clean['datetime'], unit='ms')
+gdf_clean = gdf_clean.set_index('datetime')
+
+# In[5]
+
+days = []
+
+for i in range(31):
+
+    gdf_day = gdf_clean.loc['2020-08-{}'.format(i + 1):'2020-08-{}'.format(i + 1)]
+    days.append(gdf_day)
+
+# In[6]
+
+i = 0
+
+for day in days:
+
+    i += 1
+
+    #Save frame in .json format
+    if day.empty == False:
+        day.to_file("data/real_time/" + "Aug/" + "Aug_Real_Time_{}.json".format(i), driver='GeoJSON')
+
+# In[7]
+
 #Set longitude and latitude bounds
-lon_b = (-25, 29)
-lat_b = (35, 68)
+lon_b = (-11, 36)
+lat_b = (36, 64)
 
 #Function for plotting values
 def map_plot(gdf, variable, markersize):
